@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="theme-color" content="#205f75" />
+  <meta name="description" content="A local-first differential diagnosis organizer for psychiatry and medical education." />
+  <title>OpenPsychTools Differential Matrix</title>
+  <link rel="manifest" href="manifest.webmanifest" />
+  <link rel="icon" href="icon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header class="site-header no-print">
+    <div class="brand-block">
+      <p class="eyebrow">OpenPsychTools</p>
+      <h1>Differential Matrix</h1>
+      <p class="subtitle">Compare psychiatric differentials by the features that actually distinguish them.</p>
+    </div>
+    <div class="header-actions">
+      <span class="privacy-pill">No backend</span>
+      <button id="copyBtn" class="button secondary">Copy synthesis</button>
+      <button id="printBtn" class="button secondary">Print / PDF</button>
+      <button id="resetBtn" class="button danger-outline">Reset</button>
+    </div>
+  </header>
+
+  <main class="app-shell no-print">
+    <section class="panel intro-panel">
+      <div>
+        <p class="eyebrow">Clinical reasoning aid</p>
+        <h2>Start with the syndrome, then mark discriminating findings.</h2>
+        <p>The matrix does not diagnose, rank diagnoses, or calculate probabilities. It organizes what supports, conflicts with, or still needs clarification for each competing explanation.</p>
+      </div>
+      <div class="intro-actions">
+        <div class="scope-note">
+          <strong>Scope:</strong> Designed for clinicians and learners. It is not a substitute for a complete history, examination, collateral information, or indicated medical evaluation. Acute safety or medical red flags require appropriate urgent assessment.
+        </div>
+        <button id="exampleBtn" class="button primary example-button">Try an example case</button>
+      </div>
+    </section>
+
+    <section class="workspace-grid">
+      <aside class="panel syndrome-panel" aria-labelledby="syndromeTitle">
+        <p class="eyebrow">Presenting syndrome</p>
+        <h2 id="syndromeTitle">Choose a matrix</h2>
+        <nav id="moduleNav" class="module-nav" aria-label="Differential matrices"></nav>
+        <div class="privacy-note">
+          <strong>Privacy</strong>
+          <p>Selections stay in page memory only. Nothing is transmitted or saved by this app. Refreshing or closing the page clears the case.</p>
+        </div>
+      </aside>
+
+      <section class="content-stack">
+        <section class="panel matrix-header-panel">
+          <div class="module-heading">
+            <div>
+              <p class="eyebrow" id="moduleEyebrow">Matrix</p>
+              <h2 id="moduleTitle"></h2>
+              <p id="moduleDescription" class="module-description"></p>
+            </div>
+            <div class="legend" aria-label="Matrix legend">
+              <span class="legend-chip support">Supports</span>
+              <span class="legend-chip against">Argues against</span>
+              <span class="legend-chip context">Context dependent</span>
+            </div>
+          </div>
+          <div id="exampleCase" class="example-case hidden"></div>
+          <div id="safetyBox" class="safety-box hidden" role="alert"></div>
+        </section>
+
+        <section class="panel" aria-labelledby="featuresTitle">
+          <div class="panel-heading">
+            <div>
+              <p class="eyebrow">Step 1</p>
+              <h2 id="featuresTitle">Mark the findings you know</h2>
+            </div>
+            <button id="clearModuleBtn" class="button text-button">Clear this matrix</button>
+          </div>
+          <div id="featureList" class="feature-list"></div>
+        </section>
+
+        <section class="panel" aria-labelledby="matrixTitle">
+          <div class="panel-heading compact-heading">
+            <div>
+              <p class="eyebrow">Step 2</p>
+              <h2 id="matrixTitle">See how each finding changes the differential</h2>
+            </div>
+          </div>
+          <div class="table-wrap">
+            <table class="matrix-table">
+              <thead id="matrixHead"></thead>
+              <tbody id="matrixBody"></tbody>
+            </table>
+          </div>
+        </section>
+
+        <section class="panel" aria-labelledby="synthesisTitle">
+          <div class="panel-heading compact-heading">
+            <div>
+              <p class="eyebrow">Step 3</p>
+              <h2 id="synthesisTitle">Differential synthesis</h2>
+            </div>
+          </div>
+          <p class="synthesis-note">No diagnosis is ranked. Each card simply reflects the findings you marked and the discriminators that remain unresolved.</p>
+          <div id="diagnosisCards" class="diagnosis-grid"></div>
+        </section>
+
+        <section class="panel evidence-panel" aria-labelledby="evidenceTitle">
+          <div>
+            <p class="eyebrow">Evidence</p>
+            <h2 id="evidenceTitle">Module references</h2>
+          </div>
+          <div id="references" class="references"></div>
+          <p class="evidence-footnote">Evidence reviewed November 2026. The matrices summarize discriminating clinical features and do not reproduce proprietary diagnostic criteria.</p>
+        </section>
+      </section>
+    </section>
+
+    <section class="panel info-panel">
+      <div>
+        <h2>What this tool does</h2>
+        <p>It externalizes differential reasoning by separating supportive findings, conflicting findings, and unresolved high-value questions.</p>
+      </div>
+      <div>
+        <h2>What it does not do</h2>
+        <p>It does not calculate likelihoods, make diagnoses, recommend treatment, or replace syndrome-specific diagnostic criteria.</p>
+      </div>
+      <div>
+        <h2>Clinical caution</h2>
+        <p>Comorbidity is common. A finding can support more than one diagnosis, and absence of a finding is not automatically treated as evidence against a diagnosis.</p>
+      </div>
+    </section>
+  </main>
+
+  <section id="printReport" class="print-only" aria-label="Printable differential synthesis"></section>
+
+  <div id="toast" class="toast hidden" role="status" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

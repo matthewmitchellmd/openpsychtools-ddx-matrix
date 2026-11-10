@@ -1,0 +1,9 @@
+{
+  "name":"OpenPsychTools Differential Matrix",
+  "short_name":"DDx Matrix",
+  "start_url":"./",
+  "display":"standalone",
+  "background_color":"#f3f6f8",
+  "theme_color":"#205f75",
+  "icons":[{"src":"icon.svg","sizes":"any","type":"image/svg+xml","purpose":"any"}]
+}

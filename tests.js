@@ -1,0 +1,28 @@
+const fs=require('fs');
+const vm=require('vm');
+const code=fs.readFileSync('app.js','utf8');
+const dataCode=code.split('\nconst state =')[0]+'\n;globalThis.__MODULES=MODULES;';
+const ctx={}; vm.createContext(ctx); vm.runInContext(dataCode,ctx);
+const modules=ctx.__MODULES;
+const checks=[];
+function ok(name,cond){checks.push([name,!!cond]);if(!cond)throw new Error(name)}
+const expected=['psychosis','mania','inattention','anxiety','cognitive','insomnia','depression','irritability','hallucinations','paranoia','catatonia','somatic','eating'];
+ok('thirteen modules present',modules.length===13 && expected.every(id=>modules.some(m=>m.id===id)));
+ok('unique module ids',new Set(modules.map(m=>m.id)).size===modules.length);
+ok('each module has diagnoses',modules.every(m=>Array.isArray(m.diagnoses)&&m.diagnoses.length>=5));
+ok('each module has discriminating features',modules.every(m=>Array.isArray(m.features)&&m.features.length>=8));
+ok('each module has references',modules.every(m=>Array.isArray(m.refs)&&m.refs.length>=3));
+ok('unique feature ids within modules',modules.every(m=>new Set(m.features.map(f=>f.id)).size===m.features.length));
+ok('all effect keys target diagnoses',modules.every(m=>{const ids=new Set(m.diagnoses.map(d=>d.id));return m.features.every(f=>[...Object.keys(f.effects||{}),...Object.keys(f.absent||{})].every(k=>ids.has(k)));}));
+ok('effect types valid',modules.every(m=>m.features.every(f=>[...Object.values(f.effects||{}),...Object.values(f.absent||{})].every(v=>Array.isArray(v)&&['support','against','context'].includes(v[0])&&typeof v[1]==='string'))));
+ok('safety flags included',modules.reduce((n,m)=>n+m.features.filter(f=>f.urgent).length,0)>=20);
+ok('no numerical probability language',!code.includes('probabilityScore'));
+ok('no localStorage persistence',!code.includes('localStorage'));
+ok('copy synthesis available',code.includes('buildSynthesisText'));
+ok('print synthesis available',code.includes('renderPrint'));
+ok('clinical non-ranking guardrail',code.includes('Differential synthesis (not ranked)'));
+ok('one-click fictional example present',code.includes('EXAMPLE_CASE') && code.includes('loadExample') && fs.readFileSync('index.html','utf8').includes('Try an example case'));
+ok('example pre-fills multiple matrices',code.includes('moduleAnswers') && code.includes('hallucinations: {') && code.includes('paranoia: {'));
+const psychosis=modules.find(m=>m.id==='psychosis');
+ok('psychosis matrix has rich present/absent inference mapping',psychosis.features.reduce((n,f)=>n+Object.keys(f.effects||{}).length+Object.keys(f.absent||{}).length,0)>=40);
+console.log(`${checks.length}/${checks.length} tests passed`);

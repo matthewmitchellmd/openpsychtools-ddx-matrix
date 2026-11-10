@@ -1,0 +1,6 @@
+{
+  "name":"openpsychtools-ddx-matrix",
+  "version":"0.2.3",
+  "private":true,
+  "scripts":{"test":"node tests.js"}
+}
